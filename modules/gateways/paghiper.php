@@ -168,22 +168,21 @@
             $docx2 = $doc;
         }
 
-        $vencimentoinv = $row['duedate'];
-        $hoje = date("Y-m-d");
-
-        if(strtotime($hoje) == strtotime($vencimentoinv))
-        {
-            $vencimentofim = $params['vencimento'];
-        }
-        else if(strtotime($hoje) > strtotime($vencimentoinv))
-        {
-            $vencimentofim = $params['vencimento'];
-        }
-        if(strtotime($hoje) >= strtotime($vencimentoinv))
-        {
-            $diferenca = strtotime($vencimentoinv) - strtotime($hoje);
-            $vencimentofim = floor($diferenca / (60 * 60 * 24));
-        }
+        $invoiceDuedate = $row['duedate'];
+        $dataHoje = date('Y-m-d'); // Data de Hoje
+        
+        if ( $invoiceDuedate >= date('Y-m-d') ) { // Se a data do vencimento da fatura for maior que o dia de hoje
+                $billetDuedate	= $invoiceDuedate; 
+        } elseif( $invoiceDuedate < date('Y-m-d')) { // Se a data de vencimento da fatura for menor que o dia de hoje
+                $billetDuedate	= date('Y-m-d', strtotime('+1 day')); // Se fatura já venceu, data de vencimento do boleto		= Hoje + 1 dia
+                
+        } 
+        
+        // instancia as datas para a comparacao de internvalos de dias
+        $data1 = new DateTime($billetDuedate); 
+        $data2 = new DateTime($dataHoje);
+        $intervalo = $data1->diff($data2); 
+        $vencimentoBoleto = $intervalo->days; 
 
         $valor = $params['amount'];
 
