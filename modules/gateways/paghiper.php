@@ -245,12 +245,12 @@
            "pagamento" => "pagamento"
         );
 
-        $boleto = httpPost("https://www.paghiper.com/checkout/",$paramsboleto);
-
+        $_SESSION['parametros'] = $paramsboleto;
+        
         $linha1 = get_tag('id', 'DadosBoleto', $boleto);
         $kl1 = strpos($linha1, "{");
         $kl2 = (int)strpos($linha1, "}") - (int)$kl1 + 1;
         $dadosboleto = json_decode(substr($linha1,$kl1,$kl2));
-        return ($params['linha']=="1"?'<div class="form-group"><label><i class="fa fa-keyboard-o"></i> Linha digitável</label><input type="text" id="linha" onfocus="this.select();" onmouseup="return false;" readonly="true" value="'.$dadosboleto->linhaDigitavel.'" class="form-control"></div>':null)."<span onclick='abrirboleto()' class='btn btn-block btn-primary'>".$params['botaopagar']."</span><div class='hidden' id='boleto'>".$boleto."</div><script src='https://code.jquery.com/jquery-1.12.4.min.js'integrity='sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ='crossorigin='anonymous'></script><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js' integrity='sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' crossorigin='anonymous'></script><script>function abrirboleto(){var w = window.open('', '', 'width=800, height=500, scrollbars=yes');var html = $('#boleto').html(); $(w.document.body).html(html);}".($params['abrirauto']==true ? "\$(document).ready(function() {\$('body').html(\$('#boleto').html());});" : null ).'</script>';
-    }
+        return ($params['linha']=="1"?'<div class="form-group"><label><i class="fa fa-keyboard-o"></i> Linha digitável</label><input type="text" id="linha" onfocus="this.select();" onmouseup="return false;" readonly="true" value="'.$dadosboleto->linhaDigitavel.'" class="form-control"></div>':null)."<span onclick='abrirboleto()' class='btn btn-block btn-primary'>".$params['botaopagar']."</span><div class='hidden' id='boleto'>".$boleto."</div><script src='https://code.jquery.com/jquery-1.12.4.min.js'integrity='sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ='crossorigin='anonymous'></script><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js' integrity='sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' crossorigin='anonymous'></script><script>function abrirboleto(){var w = window.open('/modules/gateways/paghiper/mostraboleto.php', '', 'width=800, height=500, scrollbars=yes');}".($params['abrirauto']==true ? "\$(document).ready(function() {\$('body').html(\$('#boleto').html());});" : null ).'</script>';
+		}
 ?>
